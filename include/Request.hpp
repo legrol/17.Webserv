@@ -1,51 +1,72 @@
 #ifndef REQUEST_HPP
 #define REQUEST_HPP
 
-#include <string>		// For std::string
-#include <map>			// For std::map
+#include <string>   // for std::string
+#include <map>      // for std::map
 
+// Request class handles HTTP request parsing and validation
+// Evaluation point: must support GET, POST and DELETE methods
+// Evaluation point: UNKNOWN requests should not crash the server
+// Evaluation point: must return appropriate status codes for all requests
 class Request {
-	// The Request class represents an HTTP request.
-	// It is designed to parse and store the components of an HTTP request.
-	// It contains methods to parse the request line, headers, and body.
-	// It provides accessors for the method, URI, version, headers, and body.
 public:
-    Request();			// Default constructor
-    bool parse(const std::string& raw_request);
-	// Parses the raw HTTP request string. It is boolean to indicate success or failure.
-	// Returns true if parsing was successful, false otherwise.
-    std::string getMethod() const;
-	// Returns the HTTP method (e.g., GET, POST).
-    std::string getUri() const;
-	// Returns the request URI. URI is the Uniform Resource Identifier.
-	// It is a string that identifies the resource being requested.
-    std::string getVersion() const;
-	// Returns the HTTP version (e.g., HTTP/1.1).
-    std::string getHeader(const std::string& key) const;
-	// Returns the value of a specific header by key (key is the name of the header).
-	// Headers is a map of header names to values (e.g., Host: localhost).
+    // Constructor: initializes request parsing with socket fd and initial data
+    // Evaluation point: must handle partial HTTP requests properly
+    Request(int fd, const std::string& initial_data);
+    
+    // Append additional body data for POST requests
+    // Evaluation point: must handle file uploads correctly
+    // Evaluation point: must respect client_max_body_size limits
+    void appendBody(const std::string& data);
+    
+    // Check if complete HTTP request has been received
+    // Used by Server to determine when to process request
+    bool isComplete() const;
+    
+    // HTTP method getter (GET, POST, DELETE)
+    // Evaluation point: must handle all supported HTTP methods
+    std::string getMethod() const { return method; }
+    
+    // URI path getter (e.g., "/", "/files/test.txt")
+    // Used for routing and file serving
+    std::string getUri() const { return uri; }
+    
+    // Query string getter (part after ? in URL)
+    // Used for CGI GET parameters
+    std::string getQuery() const { return query; }
+    
+    // HTTP version getter (should be HTTP/1.1)
+    // Used for protocol compliance checking
+    std::string getVersion() const { return version; }
+    
+    // Request body getter for POST data
+    // Evaluation point: must handle chunked encoding properly
+    // Evaluation point: must handle multipart form data for file uploads
     std::string getBody() const;
-	// Returns the body of the request, which is the content sent with the request.
+    
+    // HTTP header getter by key name
+    // Used for Content-Type, Content-Length, Host, etc.
+    std::string getHeader(const std::string& key) const;
 
 private:
-    std::string method;
-	// The HTTP method (e.g., GET, POST).
-    std::string uri;
-	// The request URI, which identifies the resource being requested (e.g., /index.html).
-    std::string version;
-	// The HTTP version (e.g., HTTP/1.1).
-    std::map<std::string, std::string> headers;
-	// The map of headers, where the key is the header name and the value is the header value.
-	// Headers are case-insensitive, so they should be stored in a case-insensitive manner.
-    std::string body;
-	// The body of the request, which contains the content sent with the request.
-	// The body is typically used in POST requests to send data to the server.
-    bool parseRequestLine(const std::string& line);
-	// Parses the request line (e.g., "GET /index.html HTTP/1.1").
-	// Returns true if parsing was successful, false otherwise.
-    bool parseHeader(const std::string& line);
-	// Parses a single header line (e.g., "Host: example.com").
-	// Returns true if parsing was successful, false otherwise.
+    std::string method;                                  // HTTP method (GET, POST, DELETE)
+    std::string uri;                                     // request URI path
+    std::string query;                                   // query string parameters
+    std::string version;                                 // HTTP protocol version
+    std::map<std::string, std::string> headers;          // HTTP headers collection
+    std::string body;                                    // raw request body data
+    std::string dechunked_body;                          // processed body after dechunking
+    bool body_complete;                                  // flag indicating if body is fully received
+    bool is_chunked;                                     // flag for chunked transfer encoding
+    int client_fd;                                       // client socket file descriptor
+    
+    // Process chunked transfer encoding
+    // Evaluation point: must handle chunked requests properly
+    void dechunkBody();
+    
+    // Process multipart form data for file uploads
+    // Evaluation point: file upload functionality must work correctly
+    void processMultipartFormData();
 };
 
 #endif

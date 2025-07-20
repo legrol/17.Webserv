@@ -3,73 +3,78 @@
 ########################################
 
 NAME = webserv
-# webserv is the name of the executable
+CONFIG_FILE = config/default.conf
+
+SRCS = srcs/main.cpp \
+       srcs/Server.cpp \
+       srcs/Config.cpp \
+       srcs/Request.cpp \
+       srcs/Response.cpp \
+       srcs/CGI.cpp
+
+OBJS = $(SRCS:srcs/%.cpp=obj/%.o)
+
 CXX = c++
-# c++ is the name of the C++ compiler
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98
-# CXXFLAGS are the flags for the C++ compiler. Wall enables all warnings, Wextra
-# enables extra warnings, Werror treats warnings as errors, and std=c++98 sets 
-# the C++ standard to C++98.
-SRC_DIR = srcs
-# srcs is the directory where the source files are located
-OBJ_DIR = obj
-# obj is the directory where the object files will be stored
-INCLUDE_DIR = include
-# include is the directory where the header files are located
-SRCS = $(wildcard $(SRC_DIR)/*.cpp)
-# SRCS is a list of all the source files in the srcs directory
-OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
-# OBJS is a list of all the object files corresponding to the source files
-DEPS = $(wildcard $(INCLUDE_DIR)/*.hpp)
-# DEPS is a list of all the header files in the include directory
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -D_GLIBCXX_USE_CXX11_ABI=0
 
+INC = -I include
 
-all: $(NAME)
-# all compile the project
-# $(NAME) is the name of the executable 
+all: setup-permissions $(NAME)
 
-$(NAME): $(OBJ_DIR) $(OBJS)
-# $(NAME) is the target to create the executable with the object files
-# $(OBJ_DIR) is the directory where the object files are stored
-# $(OBJS) are the object files that will be linked to create the executable
+$(NAME): $(OBJS)
 	@echo "Compiling $(NAME)... ⏳"
 	@$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
-	@echo "$(NAME) compiled successfully. ✅"
+	@echo "$(NAME) compiled successfully! 🎉"
+	@echo ""
+	@echo "██╗    ██╗███████╗██████╗ ███████╗███████╗██████╗ ██╗   ██╗"
+	@echo "██║    ██║██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗██║   ██║"
+	@echo "██║ █╗ ██║█████╗  ██████╔╝███████╗█████╗  ██████╔╝██║   ██║"
+	@echo "██║███╗██║██╔══╝  ██╔══██╗╚════██║██╔══╝  ██╔══██╗╚██╗ ██╔╝"
+	@echo "╚███╔███╔╝███████╗██████╔╝███████║███████╗██║  ██║ ╚████╔╝ "
+	@echo " ╚══╝╚══╝ ╚══════╝╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  "
+	@echo ""
+	@echo "         🎯 by druiz-ca, rdel-olm & sternero (2025) 🎯"
+	@echo ""
+	@echo "🚀 HTTP Server ready to serve! Execute with: ./$(NAME) $(CONFIG_FILE)"
+	@echo "📋 Ready for evaluation? Try: ./evaluation.sh"
+	@echo "🏛️  Need Siege for evaluation? Install and run with: ./siege_test.sh"
+	@echo "🔥 Want to stress test? Try: ./stress_tests.sh (destructive tests!)"
+	@echo ""
 
-$(OBJ_DIR):
-# This target ensures that the object directory exists before compiling
-# If the directory does not exist, it will be created
-	@echo "Creating object directory $(OBJ_DIR)... 🗂️"
-	@mkdir -p $(OBJ_DIR)
-	@echo "Object directory created. ✅"
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(DEPS)
-# This rule compiles each source file into an object file
-# It uses the pattern rule to match source files and create corresponding object files
-# /% is a wildcard that matches any file name
+obj/%.o: srcs/%.cpp
+	@if [ ! -d obj ]; then mkdir -p obj; echo "Creating object directory obj... 🗂️"; echo "Object directory created. ✅"; fi
 	@echo "Compiling $< into $@... 📄"
-	@$(CXX) $(CXXFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
+	@$(CXX) $(CXXFLAGS) $(INC) -c $< -o $@
 	@echo "$< compiled into $@ successfully. ✅"
 
+setup-permissions:
+	@echo "🔧 Setting up project permissions..."
+	@chmod +x *.sh 2>/dev/null || true
+	@if [ -f "./chmods.sh" ]; then ./chmods.sh >/dev/null 2>&1; fi
+	@echo "✅ Permissions configured!"
+
 clean:
-# clean removes the object files and the object directory
-	@echo "Cleaning up object files... 🧹"
-	@rm -rf $(OBJ_DIR)
-	@echo "Object files cleaned up. ✅"
+	@echo "Cleaning object files... 🧹"
+	@rm -rf obj
+	@echo "Object files cleaned! ✅"
 
 fclean: clean
-# fclean removes the executable and cleans up object files
-	@echo "Cleaning up executable... 🗑️"
+	@echo "Cleaning $(NAME)... 🧹"
 	@rm -f $(NAME)
-	@echo "Executable cleaned up. ✅"
+	@echo "$(NAME) cleaned! ✅"
+	@echo "Cleaning evaluation log files... 🗂️"
+	@rm -f evaluation_results.log server_eval.log valgrind_detailed.log compile.log *.log
+	@echo "Evaluation log files cleaned! ✅"
+	@echo "Cleaning siege logs directory... 📊"
+	@rm -rf logs/
+	@echo "Siege logs directory cleaned! ✅"
+	@echo "Cleaning siege configuration... ⚙️"
+	@rm -f .siegerc
+	@echo "Siege configuration cleaned! ✅"
+	@echo "Cleaning evaluation status files... 📄"
+	@rm -f evaluation_status.md EVALUATION_STATUS.md *.md
+	@echo "Evaluation status files cleaned! ✅"
 
-re:
-# re rebuilds the project from scratch
-	@echo "Rebuilding the project... 🔄"
-	@$(MAKE) fclean
-	@$(MAKE) all
-	@echo "Project rebuilt successfully. ✅"
+re: fclean all
 
-.PHONY: all clean fclean re
-# .PHONY declares that these targets are not files, but commands
-# This prevents make from getting confused if a file with the same name exists
+.PHONY: all setup-permissions clean fclean re

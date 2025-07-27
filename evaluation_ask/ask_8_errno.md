@@ -187,7 +187,7 @@ grep -A 10 -B 5 "accept(" srcs/Server.cpp | grep errno
 ### **Verificación de Pattern Correcto**
 ```bash
 # Verificar que solo usamos valores de retorno
-grep -A 5 "recv\|send\|accept" srcs/Server.cpp | grep -E "(> 0|== 0|< 0)"
+# grep -A 5 "recv\|send\|accept" srcs/Server.cpp | grep -E "(> 0|== 0|< 0)"
 
 # Debe mostrar verificaciones de valores, NO errno
 ```

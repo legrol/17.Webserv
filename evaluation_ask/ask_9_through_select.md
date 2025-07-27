@@ -11,7 +11,7 @@
 - 🚨 **TODOS los file descriptors** deben pasar por select()
 - 🚨 **NO hay excepciones** - ni siquiera para operaciones "simples"
 - 🚨 **Violación = fallo inmediato** de la evaluación
-
+ready
 ---
 
 ## 📍 **VERIFICACIÓN DE CUMPLIMIENTO**
@@ -159,7 +159,7 @@ void Server::handleClientWrites(fd_set& write_fds) {
 grep -r -n "recv\|send\|accept\|read\|write" srcs/ include/
 
 # 2. Verificar que están dentro de funciones llamadas desde el main loop
-grep -A 20 "handleNewConnections\|handleClientReads\|handleClientWrites" srcs/Server.cpp
+# grep -A 20 "handleNewConnections\|handleClientReads\|handleClientWrites" srcs/Server.cpp
 
 # 3. Confirmar que todas usan FD_ISSET()
 grep -B 5 -A 10 "recv\|send\|accept" srcs/Server.cpp | grep "FD_ISSET"

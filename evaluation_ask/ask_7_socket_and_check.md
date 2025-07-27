@@ -27,10 +27,10 @@
 ### **Comando de Búsqueda Completa**
 ```bash
 # Buscar todas las operaciones de socket
-grep -n "recv\|send\|accept\|read\|write" srcs/*.cpp include/*.hpp
+# grep -n "recv\|send\|accept\|read\|write" srcs/*.cpp include/*.hpp
 
 # Ver el contexto de cada operación
-grep -A 5 -B 5 "recv\|send\|accept" srcs/Server.cpp
+# grep -A 5 -B 5 "recv\|send\|accept" srcs/Server.cpp
 ```
 
 ---

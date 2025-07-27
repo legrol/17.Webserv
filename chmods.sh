@@ -176,6 +176,7 @@ echo "🚀 Configurando permisos de scripts ejecutables..."
 chmod 755 evaluation.sh 2>/dev/null
 chmod 755 stress_tests.sh 2>/dev/null
 chmod 755 siege_test.sh 2>/dev/null
+chmod 755 browser_test.sh 2>/dev/null
 
 # Scripts de evaluación automatizada
 chmod 755 evaluation_test/*.sh 2>/dev/null

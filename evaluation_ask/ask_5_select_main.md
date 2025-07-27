@@ -72,7 +72,7 @@ int ready = select(max_fd + 1,
 grep -n "select(" srcs/Server.cpp
 
 # 2. Ver contexto del main loop
-grep -A 10 -B 5 "while.*true" srcs/Server.cpp | grep -A 5 -B 5 select
+grep -A 25 -B 5 "while.*true" srcs/Server.cpp | grep -A 5 -B 5 select
 
 # 3. Verificar parámetros read_fds y write_fds
 grep "read_fds.*write_fds" srcs/Server.cpp
@@ -93,7 +93,7 @@ while (true) {                                          // ← MAIN LOOP
 ### **Conteo de Select() (Debe ser 1)**
 ```bash
 # Debe retornar 1 (solo una llamada a select)
-grep -c "select(" srcs/Server.cpp
+grep -nP '^(?!\s*//).*select\(' srcs/Server.cpp | grep -c "select("
 ```
 
 ---
@@ -150,9 +150,9 @@ grep -A 2 -B 2 "select.*read_fds.*write_fds" srcs/Server.cpp
 ./webserv &
 
 # Test requests simultáneos (read y write operations)
-curl http://localhost:8080/ &
-curl -X POST http://localhost:8080/upload -d "test data" &
-curl http://localhost:8080/files/file1.txt &
+curl http://localhost:9000/ &
+curl -X POST http://localhost:9000/upload -d "test data" &
+curl http://localhost:9000/files/file1.txt &
 
 # Verificar que todos funcionan correctamente
 wait

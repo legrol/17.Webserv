@@ -25,7 +25,7 @@
 ### **Comando de Verificación**
 ```bash
 # Ver la implementación completa del flujo
-grep -A 20 "handleClientReads\|handleClientWrites" srcs/Server.cpp
+# grep -A 20 "handleClientReads\|handleClientWrites" srcs/Server.cpp
 ```
 
 ---
@@ -168,13 +168,13 @@ for (auto& client : _clients) {
 ### **Comando para Ver el Flujo Completo**
 ```bash
 # 1. Ver el main loop con select()
-grep -A 10 "int ready = select" srcs/Server.cpp
+grep -A 10 "int activity = select" srcs/Server.cpp
 
 # 2. Ver handleClientReads (un recv por cliente)
-grep -A 15 "void.*handleClientReads" srcs/Server.cpp
+# grep -A 15 "void.*handleClientReads" srcs/Server.cpp
 
 # 3. Ver handleClientWrites (un send por cliente)
-grep -A 15 "void.*handleClientWrites" srcs/Server.cpp
+# grep -A 15 "void.*handleClientWrites" srcs/Server.cpp
 ```
 
 ### **Verificar que NO hay Multiple recv/send**
@@ -191,7 +191,7 @@ grep -n "send(" srcs/Server.cpp
 ### **Estructura del Código a Mostrar al Evaluador**
 ```bash
 # Mostrar el flujo completo desde select() hasta read/write
-sed -n '/void Server::run()/,/^}/p' srcs/Server.cpp | grep -A 20 -B 5 "select\|handleClient"
+# sed -n '/void Server::run()/,/^}/p' srcs/Server.cpp | grep -A 20 -B 5 "select\|handleClient"
 ```
 
 ---

@@ -280,6 +280,6 @@ curl http://localhost:8080/
   <img src="imgReadme/img6.png" alt="Project View" width="650"/>
 </p>
 **<p align="center">
-  <img src="imgReadme/Img7.png" alt="Vista del proyecto" width="400"/>
-  <img src="imgReadme/Img8.png" alt="Vista del proyecto" width="400"/>
+  <img src="imgReadme/img7.png" alt="Vista del proyecto" width="400"/>
+  <img src="imgReadme/img8.png" alt="Vista del proyecto" width="400"/>
 </p>

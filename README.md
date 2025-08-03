@@ -269,3 +269,17 @@ curl http://localhost:8080/
 <p align="center">        
   <img src="imgReadme/img2.png" alt="Project View" width="650"/>
 </p>
+<p align="center">
+  <img src="imgReadme/Img3.png" alt="Vista del proyecto" width="400"/>
+  <img src="imgReadme/Img4.png" alt="Vista del proyecto" width="400"/>
+</p>
+<p align="center">        
+  <img src="imgReadme/img5.png" alt="Project View" width="650"/>
+</p>
+<p align="center">        
+  <img src="imgReadme/img6.png" alt="Project View" width="650"/>
+</p>
+**<p align="center">
+  <img src="imgReadme/Img7.png" alt="Vista del proyecto" width="400"/>
+  <img src="imgReadme/Img8.png" alt="Vista del proyecto" width="400"/>
+</p>

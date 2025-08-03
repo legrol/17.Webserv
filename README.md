@@ -260,3 +260,12 @@ curl http://localhost:8080/
 ```
 
 **🎯 ¡Ready for evaluation!** Este servidor HTTP está completamente preparado para superar la evaluación de 42 School con flying colors! 🌟
+
+![Vistas Proyecto](https://img.shields.io/badge/Vistas_Proyecto-green?style=for-the-badge)
+
+<p align="center">        
+  <img src="imgReadme/img1.png" alt="Project View" width="650"/>
+</p>
+<p align="center">        
+  <img src="imgReadme/img2.png" alt="Project View" width="650"/>
+</p>
